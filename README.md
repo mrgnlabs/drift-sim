@@ -11,6 +11,7 @@ bash setup.sh
 
 ## run an example 
 
+- `sim_example.ipynb`: example sim which compares a clearing house with no-spread and with a spread 
 - `sim_eval.ipynb`
 
 ## update scripts
