@@ -53,8 +53,7 @@ class Arb(Agent):
         target_mark = (target_mark - cur_mark) * intensity + cur_mark # only arb 1% of gap?
         # print(now, market.amm.peg_multiplier, calculate_mark_price_amm(market.amm), cur_mark, target_mark)
 
-
-        # print(cur_mark, target_mark)
+        # print("curr mark, target mark:", cur_mark, target_mark)
 
         #account for exchange fee in arb price
         exchange_fee = float(state_i.fee_structure.numerator)/state_i.fee_structure.denominator
@@ -83,8 +82,9 @@ class Arb(Agent):
             )
         
         trade_size = int(abs(trade_size)) # whole numbers only 
-        if trade_size:
-            print('NOW: ', now)
+        # if trade_size:
+        #     print('NOW: ', now)
+            
         quote_asset_reserve = (
             trade_size 
             * AMM_TIMES_PEG_TO_QUOTE_PRECISION_RATIO 
@@ -112,7 +112,7 @@ class Arb(Agent):
             event = NullEvent(timestamp=now)
         else: 
             event = OpenPositionEvent(self.user_index, direction, int(trade_size), now, market_index)
-            print(direction, trade_size/1e6, 'LUNA-PERP @', entry_price, '(',target_price/1e10,')')
+            # print(direction, trade_size/1e6, 'LUNA-PERP @', entry_price, '(',target_price/1e10,')')
 
 
         # print(now, market.amm.peg_multiplier, calculate_mark_price_amm(market.amm), cur_mark, target_mark)
@@ -132,12 +132,13 @@ class Noise(Agent):
         market_index = self.market_index
         user_index = self.user_index
         intensity = self.intensity  
-        direction = 'long'
+        direction = 'long' if np.random.choice([0, 1]) % 2 == 0 else 'short'
         trade_size = int(self.size * 1e6)
         now = state_i.time   
 
-        x = 5
-        every_x_minutes = 60 * x
+        # x = 5
+        # every_x_minutes = 60 * x
+        every_x_minutes = 1 # trade every minute 
         if (now % every_x_minutes) < every_x_minutes - 1:
             return NullEvent(timestamp=now)                                                          
 
